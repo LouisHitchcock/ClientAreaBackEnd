@@ -1,0 +1,13 @@
+# Ignore Firebase config and secrets
+/config/
+
+# Node dependencies (if used)
+node_modules/
+
+# Build output (optional)
+dist/
+build/
+
+# System files
+.DS_Store
+.env
