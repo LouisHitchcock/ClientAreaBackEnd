@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <title>Client Gallery Admin</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="/style/style.css" />
 </head>
 <body>
   <div id="admin-header"></div>
 
+  <nav id="admin-nav">
+    <a class="newClient" href="addClient.html">New Client</a>
+    <a href="admin-gallery.html">Admin Gallery</a>
+    <button id="signOutBtn" class="logout">Log Out</button>
+  </nav>
+
   <div id="admin-ui">
-    <h1>All Client Galleries</h1>
-    <div style="margin-bottom: 1rem;">
-      <a href="addClient.html">
-        <button class="primary">➕ Add Client</button>
-      </a>
-    </div>
-    <div id="client-list"></div>
+  <div id="client-list"></div>
   </div>
 
   <div id="login-ui" style="display: none;"></div>
@@ -55,21 +55,23 @@
         const data = docSnap.data();
 
         const container = document.createElement("div");
-        container.style.border = "1px solid #ccc";
-        container.style.padding = "1rem";
-        container.style.marginBottom = "1rem";
-        container.style.borderRadius = "8px";
-        container.style.backgroundColor = "#f9f9f9";
+        container.className = "client-card";
+        container.style.backgroundImage = `url('${data.heroImage}')`;
+        container.style.backgroundSize = "cover";
+        container.style.backgroundPosition = "center";
+        container.style.color = "white";
+        container.style.position = "relative";
 
         container.innerHTML = `
-          <p><strong>Title:</strong> ${data.title}</p>
-          <p><strong>Slug:</strong> ${slug}</p>
-          <p><strong>Date:</strong> ${data.date}</p>
-          <p><strong>Location:</strong> ${data.location}</p>
-          <a href="clients/index.html?slug=${slug}" target="_blank">
-            <button>Visit Gallery</button>
-          </a>
+          <div class="card-overlay">
+            <p><strong>${data.title}</strong></p>
+            <p>${data.date}</p>
+            <a href="clients/index.html?slug=${slug}" target="_blank">
+              <button>Open</button>
+            </a>
+          </div>
         `;
+
 
         clientList.appendChild(container);
       });
@@ -103,13 +105,9 @@
         loginUI.style.display = "none";
         adminUI.style.display = "block";
 
-        const header = document.getElementById("admin-header");
-        const signOutBtn = document.createElement("button");
-        signOutBtn.textContent = "Sign Out";
-        signOutBtn.className = "danger signout-btn";
-        signOutBtn.onclick = () => signOut(auth).then(() => location.reload());
-
-        header.appendChild(signOutBtn);
+        document.getElementById("signOutBtn").onclick = () => {
+          signOut(auth).then(() => location.reload());
+        };
 
         loadClients();
       } else {
